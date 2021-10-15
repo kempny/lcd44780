@@ -1,14 +1,66 @@
 int i2copen(int controller, int device);
 
-Initialize display I2C interface
+  Initialize display I2C interface
 
-controller - I2c controller
-device - I2c address of device
+   controller - I2c controller
+   device - I2c address of device
+   
+   Returs file descriptor to opened connection.
 
+
+
+void lcdinit(int fdlcd, int rows, int cols);
+
+  Initialize the display.
+   
+   fdlcd - file descriptor returned by i2copen()
+   
+   Perform controller initialization
+   Turn on the backlight
+   Turn on the display
+   Disable the cursor
+   Store display geometry (rows, columns)
+   Number of rows and columns are stored in dispdef structure (see lcdi2c.h)
+   
+
+void lcdSet(int fdlcd, int disp, int cur, int blin, int back);
+
+   fdlcd - file descriptor returned by i2copen()
+   Set display on/off, cursor on/off cursor blinking on/off, backlight on/off
+     1 - ON, 0 - OFF, 99 - unchanged
+ 
+ 
+void lcdLoc(int fdlcd, int col, int line);
+  
+  Move cursor to position line, column
+  
+    fdlcd - file descriptor returned by i2copen()
+
+
+void lcdClr(int fdlcd);
+
+  Clear the screen, move cursor to line 0, column 0
+  
+    fdlcd - file descriptor returned by i2copen()
+
+
+void lcdChar(int fdlcd, char val);
+
+  Display character val in current cursor position
+  
+    fdlcd - file descriptor returned by i2copen()
 
 void lcdLine(int fdlcd, int x, int y, char* text);
-void lcdClr(int fdlcd);
-void lcdinit(int fdlcd, int rows, int cols);
-void lcdLoc(int fdlcd, int col, int line);
-void lcdChar(int fdlcd, char val); 
-void lcdSet(int fdlcd, int disp, int cur, int blin, int back); //display, cursor, blink on/off,
+
+  Display the line of text, truncated on the right if necessary
+   
+   fdlcd - file descriptor returned by i2copen()
+   x - column to start displaying text
+   y - line to display text
+   
+   
+
+
+
+ 
+
