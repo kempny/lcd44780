@@ -1,0 +1,27 @@
+How to install 
+=======================
+
+make
+make install
+make clean
+
+The library will be installed in:
+
+/usr/local/lib
+
+The header file in:
+
+/usr/local/include
+
+
+To uninstall library
+=======================
+
+make uninstall
+
+
+To compile examples
+======================
+
+cd examples
+make
