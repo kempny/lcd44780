@@ -1,1 +1,14 @@
+int i2copen(int controller, int device);
 
+Initialize display I2C interface
+
+controller - I2c controller
+device - I2c address of device
+
+
+void lcdLine(int fdlcd, int x, int y, char* text);
+void lcdClr(int fdlcd);
+void lcdinit(int fdlcd, int rows, int cols);
+void lcdLoc(int fdlcd, int col, int line);
+void lcdChar(int fdlcd, char val); 
+void lcdSet(int fdlcd, int disp, int cur, int blin, int back); //display, cursor, blink on/off,
