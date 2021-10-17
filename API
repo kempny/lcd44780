@@ -57,7 +57,17 @@ void lcdLine(int fdlcd, int x, int y, char* text);
    fdlcd - file descriptor returned by i2copen()
    x - column to start displaying text
    y - line to display text
+   text - text to display
    
+void lcdBlock(int fdlcd, int x, int y, char* text);
+  
+  Display block of text, wrap lines, truncated on the
+  end of display if necessary
+
+   fdlcd - file descriptor returned by i2copen()
+   x, y - start column / line of the displayed text 
+   y - line to display text
+   text - text to display
    
 
 
