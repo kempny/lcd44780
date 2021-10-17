@@ -34,7 +34,7 @@ unsigned char cmd_datac;
 
 
 //*****************************************
-// Display the line of text, truncated on the right if necessary 
+// Display one line of text, truncated on the right if necessary 
 
 void lcdLine(int fdlcd, int x, int y, char* text)
 {
@@ -63,6 +63,41 @@ j = ((strlen(text) + x) < parm[fdlcd].cols) ? strlen(text) : (parm[fdlcd].cols -
   free_disp=0;
 }
 
+//*****************************************
+// Display block of text, wrap lines, truncated on the 
+// end of display if necessary
+
+void lcdBlock(int fdlcd, int x, int y, char* text)
+{
+static int i, j;
+
+ for(j=0; j<100; j++)
+  {
+   if(free_disp == 0)
+    break;
+   Delay_mls(100);
+  }
+
+   if(free_disp == 1)
+     {
+      printf("Display busy\n");
+      return;
+     }
+
+
+  free_disp = 1;
+
+j = (strlen(text) + x + (parm[fdlcd].cols * y ) < parm[fdlcd].cols * parm[fdlcd].rows) ? strlen(text) : (parm[fdlcd].cols * parm[fdlcd].rows - (y * parm[fdlcd].cols) - x);
+
+
+  for(i=0;i<j;i++)
+   {
+    lcdLoc(fdlcd, (x + i) % parm[fdlcd].cols, ((x + (y * parm[fdlcd].cols) + i) / parm[fdlcd].cols));
+    lcdChar(fdlcd, text[i]);
+   }
+  free_disp=0;
+}
+
 
 
 //*************************************
@@ -78,7 +113,7 @@ void lcdClr(int fdlcd)   {
 
 
 //*************************************
-// Set cursor to location on LCD
+// Set cursor to location row/column on LCD
 
 void lcdLoc(int fdlcd, int col, int line)   {
 
