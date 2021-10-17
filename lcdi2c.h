@@ -11,6 +11,7 @@ void lcdClr(int fdlcd);
 void lcdinit(int fdlcd, int rows, int cols);
 void lcdLoc(int fdlcd, int col, int line);
 void lcdChar(int fdlcd, char val); 
+void lcdBlock(int fdlcd, int x, int y, char* text);
 
 struct  dispdef
 {
