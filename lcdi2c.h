@@ -13,6 +13,7 @@ void lcdLoc(int fdlcd, int col, int line);
 void lcdChar(int fdlcd, char val); 
 void lcdBlock(int fdlcd, int x, int y, char* text);
 
+
 struct  dispdef
 {
   int i2caddr;
@@ -22,5 +23,6 @@ struct  dispdef
   int backl;
   unsigned int rows;
   unsigned int cols;
+  int free_disp;
 };
 
