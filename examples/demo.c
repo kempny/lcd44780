@@ -21,7 +21,6 @@
 
 
 
-
 char buftime[25];
 
 
@@ -48,7 +47,6 @@ lcdinit(display1, 4, 20); // setup LCD
 display2=i2copen(1, I2C_ADDR2);
 lcdinit(display2, 2, 16); // setup LCD
 
-free_disp=0;
 
 
 
@@ -78,12 +76,17 @@ lcdLine(display2,0,1,"D23456789K");
 lcdLine(display1,0,0,"P234567890");
 lcdLine(display1,10,1,"D123456789K");
 lcdLine(display1,10,2,"T23");
-//lcdLine(display1,0,3,buftime);
 sleep(1);
 
+lcdClr(display0);
 lcdClr(display1);
+lcdClr(display2);
+lcdBlock(display0,5,2,"block01234567890123456789");
 lcdBlock(display1,5,2,"block01234567890123456789");
+lcdBlock(display2,5,1,"block01234567890123456789");
 
+sleep(3);
+lcdLine(display1,0,3,buftime);
 lcdClr(display0);
 lcdLoc(display0, 0,0);
 lcdChar(display0, 'A');
