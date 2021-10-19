@@ -28,7 +28,7 @@ INCLUDE	= -I.
 DEFS	= -D_GNU_SOURCE
 CFLAGS	= $(DEFS) $(LIBS) 
 
-LIBS    = -llcdi2c 
+LIBS    = -llcdi2c -lpthread
 
 ###############################################################################
 
