@@ -10,4 +10,4 @@ Support for 4x20, 4x16, 2x16 displays (other geometries should work as well, but
 
 Multithread safe
 
-Animation of displayed text (to do)
+Animation of displayed text 
