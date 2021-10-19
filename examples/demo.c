@@ -151,7 +151,7 @@ lcdLine(display0,5,1,"The End");
 lcdLine(display1,6,1,"The End");
 lcdLine(display2,5,0,"The End");
 
-//  the time will be displayed by thread
+//  the time will still be displayed by thread
 
 sleep(3);
 
