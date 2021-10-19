@@ -1,3 +1,4 @@
+void Delay_sec(int seconds);
 void Delay_mcs(int microsec);
 void Delay_mls(int milisec);
 void Delay_ns(int nanosec);
@@ -12,7 +13,11 @@ void lcdinit(int fdlcd, int rows, int cols);
 void lcdLoc(int fdlcd, int col, int line);
 void lcdChar(int fdlcd, char val); 
 void lcdBlock(int fdlcd, int x, int y, char* text);
+void lcdRun(int fdlcd, int mode, int speed, int line, char* text);
+void lcdStop(int fdlcd);
 
+
+#define ANIMLEN 200
 
 struct  dispdef
 {
@@ -24,5 +29,11 @@ struct  dispdef
   unsigned int rows;
   unsigned int cols;
   int free_disp;
+  int move;
+  int speed;
+  int line;
+  int pos;
+  int move_mode;
+  char text[ANIMLEN];
 };
 

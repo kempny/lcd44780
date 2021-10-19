@@ -13,6 +13,8 @@
 #include <unistd.h>
 #include <linux/i2c-dev.h>
 #include <lcdi2c.h>
+#include "pthread.h"
+
 
 #define DATA  1 // Mode - Sending data
 #define CMD  0 // Mode - Sending command
@@ -25,7 +27,6 @@ unsigned char byte;
 
 struct dispdef parm[MAXDISPL];
 
-//int free_disp;
 
 int dispfree(int fdlcd);
 void lcdLocI(int fdlcd, int col, int line);
@@ -40,7 +41,7 @@ unsigned char cmd_datac;
 
 void lcdLine(int fdlcd, int x, int y, char* text)
 {
-static int i, j; 
+int i, j; 
 
   if ( dispfree(fdlcd) ) return;
 
@@ -53,12 +54,27 @@ static int i, j;
 }
 
 //*****************************************
+// Display one line of text, truncated on the right if necessary 
+// For internal use of library, display is already locked
+
+void lcdLineI(int fdlcd, int x, int y, char* text)
+{
+int i, j; 
+
+    lcdLocI (fdlcd, x, y) ; 
+
+    j = ((strlen(text) + x) < parm[fdlcd].cols) ? strlen(text) : (parm[fdlcd].cols - x);
+    for(i=0;i<j;i++)
+    lcdCharI(fdlcd, text[i]);
+}
+
+//*****************************************
 // Display block of text, wrap lines, truncated at the 
 // end of display if necessary
 
 void lcdBlock(int fdlcd, int x, int y, char* text)
 {
-static int i, j;
+int i, j;
 
 
   if ( dispfree(fdlcd) ) return;
@@ -72,6 +88,57 @@ static int i, j;
       lcdCharI(fdlcd, text[i]);
      }
     parm[fdlcd].free_disp=0;
+}
+
+/**********************************************************/
+void *run(void *ptr)
+{
+
+int fdlcd;
+int i;
+
+
+  fdlcd =  (int)ptr;
+
+  parm[fdlcd].pos = 0;
+  parm[fdlcd].move = 1;
+  while(parm[fdlcd].move)
+   {
+    if (! dispfree(fdlcd) )
+     {
+       lcdLineI(fdlcd, 0, parm[fdlcd].line, &parm[fdlcd].text[parm[fdlcd].pos]);
+       if(strlen(parm[fdlcd].text) > parm[fdlcd].cols)
+        {
+         parm[fdlcd].pos++;
+         if (parm[fdlcd].pos > strlen(parm[fdlcd].text) - parm[fdlcd].cols)
+            parm[fdlcd].pos = 0;
+        }
+     }
+    parm[fdlcd].free_disp = 0;
+    for(i = 0; i < parm[fdlcd].speed; i++)
+      Delay_mls(100);
+   }
+  return(0);
+}
+
+/**********************************************************/
+// speed  - speed of annimation, in 1/10 sec increments
+// mode - mode of animation
+
+void lcdRun(int fdlcd, int mode, int speed, int line, char* text)
+{
+    pthread_t thread_id;
+    parm[fdlcd].speed = speed;
+    parm[fdlcd].move_mode = mode;
+    parm[fdlcd].line = line;
+    strncpy(parm[fdlcd].text, text, ANIMLEN); 
+    pthread_create (&thread_id, NULL, run, (void *)fdlcd);
+
+}
+/**********************************************************/
+void lcdStop(int fdlcd)
+{
+  parm[fdlcd].move = 0;
 }
 
 //****************************************
@@ -113,6 +180,7 @@ void lcdClr(int fdlcd)   {
 // For internal use of library, display is already locked
 
 void lcdLocI(int fdlcd, int col, int line)   {
+
 
   if(line < 2)
     send_byte(fdlcd, konvline[line] + col, CMD);
