@@ -122,7 +122,7 @@ int i;
 }
 
 /**********************************************************/
-// speed  - speed of annimation, in 1/10 sec increments
+// speed  - speed of animation, in 1/10 sec increments
 // mode - mode of animation
 
 void lcdRun(int fdlcd, int mode, int speed, int line, char* text)
