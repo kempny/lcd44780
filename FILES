@@ -1,18 +1,9 @@
-API 
+API - library functions description
+INSTALL - installation instruction
+delay.c	interrupt-safe delay routines
+lcdi2c.h library header file
+lcdi2clib.c library routines
+adjustcurrent.c  auxiliary program to adjust stepper motor current limit 
+FILES - this file
 
-INSTALL
-
-Makefile
-
-README.md
-
-VERSION
-
-delay.c
-
-lcdi2c.1.3.tgz
-
-lcdi2c.h
-
-lcdi2clib.c
-
+lcdi2c.1.3.tgz tar copy of this library, to unpack: tar -xf lcdi2c.1.3.tgz 
