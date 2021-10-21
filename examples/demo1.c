@@ -1,5 +1,5 @@
 /********************************************************************************
-* demo.c
+* demo1.c
 *       This file is part of lcdi2c - RaspberryPi library
 *       for LCD display with the HITACHI HD44780 and compatible controlleri,
 *       I2C interface with PCF8574 or/and PCF8574A I/O expander
@@ -20,11 +20,11 @@
 *    along with wiringPi.  If not, see <http://www.gnu.org/licenses/>.
 *
 *********************************************************************************
-**   demo program for 3 displays connected to I2C bus                          **    
+**   demo program for 1 display                                                ** 
 **   compile with:                                                             **
 **     make                                                                    **
 **   run:                                                                      **
-**     ./demo                                                                  **
+**     ./demo1                                                                 **
 ********************************************************************************/
 
 #include <string.h> 
@@ -46,20 +46,15 @@
 
 
 
-// 3 displays,   i2c addresses
-// change if necessary to your addresses
+//  i2c address, change if necessary
 
-#define I2C_ADDR0   0x26 // I2C device address
-#define I2C_ADDR1   0x27 // I2C device address
-#define I2C_ADDR2   0x23 // I2C device address
+#define I2C_ADDR0   0x27 // I2C device address
 
 
 char buftime[25];
 
 
 int display0;
-int display1;
-int display2;
 
 int n, m;
 time_t czas1;
@@ -91,36 +86,19 @@ char *argv[];
 {
 
 
-// display 0, 4 lines, 16 columns
+// display 0, 4 lines, 20 columns
   display0=i2copen(1, I2C_ADDR0);
-  lcdinit(display0, 4, 16); // setup LCD
-
-// display 1, 4 lines, 20 columns
-  display1=i2copen(1, I2C_ADDR1);
-  lcdinit(display1, 4, 20); // setup LCD
-
-// display 2, 2 lines, 16 columns
-  display2=i2copen(1, I2C_ADDR2);
-  lcdinit(display2, 2, 16); // setup LCD
-
+  lcdinit(display0, 4, 20); // setup LCD
 
 // turn display and backlight on, cursor and blinking off
   lcdSet(display0,1, 0, 0, 1); 
-  lcdSet(display1,1, 0, 0, 1); 
-  lcdSet(display2,1, 0, 0, 1); 
 
-//Clear displays
+//Clear display
   lcdClr(display0);
-  lcdClr(display1);
-  lcdClr(display2);
 
-// Display some texts
+// Display some text
 lcdLine(display0,6,0,"Test");
 lcdLine(display0,3,1,"Display 0");
-lcdLine(display1,6,0,"Test");
-lcdLine(display1,3,1,"Display 1");
-lcdLine(display2,6,0,"Test");
-lcdLine(display2,3,1,"Display 2");
 sleep(3);
 
 // Create thread to display date and time on display 0
@@ -131,27 +109,27 @@ sleep(3);
 
 //Display animated text 
 
+//Mode 0, display 0
+lcdRun(display0, 0, 3, 1, "++ To be or not to be -- ");
+sleep(15);
+
+lcdStop(display0);
+lcdClr(display0);
+sleep(2);
+
 // Mode 1, display 0
-lcdRun(display0, 1, 3, 1, "++To be or not to be -- ");
-
-//Mode 0, display 1
-lcdRun(display1, 0, 3, 1, "++To be or not to be, that is the question --");
-
-//Mode 0, display 2
-lcdRun(display2, 0, 3, 1, "++To be or not to be, that is the question --");
-
+lcdRun(display0, 1, 3, 1, "++ To be or not to be -- ");
 sleep(10);
 
 //stop displaying animated text on display 0
 lcdStop(display0);
-
-// Clear display 0
 lcdClr(display0);
 sleep(2);
 
 //Display line of text on display 0
 lcdLine(display0,0,1,"ABCDEFGHI");
 sleep(2);
+lcdClr(display0);
 
 
 
@@ -172,28 +150,16 @@ lcdChar(display0, 'D');
 
 sleep(3);
 
-//Stop animation on display2
-lcdStop(display2);
+//Switch off display 0
+  lcdSet(display0,0, 0, 0, 1); 
 sleep(2);
 
-
-//Switch off display 2
-  lcdSet(display2,0, 0, 0, 1); 
+//Switch on display 0
+  lcdSet(display0,1, 0, 0, 1); 
 sleep(2);
-
-//Switch on display 2
-  lcdSet(display2,1, 0, 0, 1); 
-sleep(2);
-
-//Stop animation on display1
-lcdStop(display1);
 
 lcdClr(display0);
-lcdClr(display1);
-lcdClr(display2);
 lcdLine(display0,5,1,"The End");
-lcdLine(display1,6,1,"The End");
-lcdLine(display2,5,0,"The End");
 
 //  the time is still displayed by thread
 

@@ -32,7 +32,7 @@ LIBS    = -llcdi2c -lpthread
 
 ###############################################################################
 
-SRC	=	demo.c
+SRC	=	demo.c demo1.c
 
 #OBJ	=	$(SRC:.c=.o)
 #BINS    =       $(SRC:.c=)
