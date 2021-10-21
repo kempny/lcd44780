@@ -1,3 +1,26 @@
+/********************************************************************************
+* lcdi2clib.c
+*       This file is part of lcdi2c - RaspberryPi library
+*       for LCD display with the HITACHI HD44780 and compatible controller,
+*       I2C interface with PCF8574 or/and PCF8574A I/O expander
+*       Copyright (C) 2021  Boguslaw Kempny kempny@stanpol.com.pl
+*
+*********************************************************************************
+*    lcdi2c is free software: you can redistribute it and/or modify
+*    it under the terms of the GNU Lesser General Public License as published by
+*    the Free Software Foundation, either version 3 of the License, or
+*    (at your option) any later version.
+*
+*    stepmotor is distributed in the hope that it will be useful,
+*    but WITHOUT ANY WARRANTY; without even the implied warranty of
+*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*    GNU Lesser General Public License for more details.
+*
+*    You should have received a copy of the GNU Lesser General Public License
+*    along with wiringPi.  If not, see <http://www.gnu.org/licenses/>.
+*
+*********************************************************************************/
+
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -106,12 +129,37 @@ int i;
    {
     if (! dispfree(fdlcd) )
      {
-       lcdLineI(fdlcd, 0, parm[fdlcd].line, &parm[fdlcd].text[parm[fdlcd].pos]);
-       if(strlen(parm[fdlcd].text) > parm[fdlcd].cols)
+      if((parm[fdlcd].move_mode == 0)) // at end start from begining
+       {
+        lcdLineI(fdlcd, 0, parm[fdlcd].line, &parm[fdlcd].text[parm[fdlcd].pos]);
+        if (parm[fdlcd].pos > strlen(parm[fdlcd].text) - parm[fdlcd].cols)
+          lcdLineI(fdlcd, 
+                   strlen(parm[fdlcd].text) - parm[fdlcd].pos, 
+                   parm[fdlcd].line, 
+                   "                              ");
+          
+         {
+          parm[fdlcd].pos++;
+          if (parm[fdlcd].pos == strlen(parm[fdlcd].text))
+             parm[fdlcd].pos = 0;
+         }
+       }
+      else
+       if((parm[fdlcd].move_mode == 1)) // append begining of text to end of text
         {
-         parm[fdlcd].pos++;
-         if (parm[fdlcd].pos > strlen(parm[fdlcd].text) - parm[fdlcd].cols)
-            parm[fdlcd].pos = 0;
+          lcdLineI(fdlcd, 0, parm[fdlcd].line, &parm[fdlcd].text[parm[fdlcd].pos]);
+          if(strlen(parm[fdlcd].text) > parm[fdlcd].cols)
+           {
+            parm[fdlcd].pos++;
+            if (parm[fdlcd].pos > strlen(parm[fdlcd].text) - parm[fdlcd].cols -1)
+             {
+               lcdLineI(fdlcd, strlen(parm[fdlcd].text) - parm[fdlcd].pos +1, 
+                              parm[fdlcd].line, parm[fdlcd].text);
+
+               if (parm[fdlcd].pos > strlen(parm[fdlcd].text))
+                 parm[fdlcd].pos = 1; //  not 0, the line is already displayed
+             }
+           }
         }
      }
     parm[fdlcd].free_disp = 0;
@@ -135,6 +183,7 @@ void lcdRun(int fdlcd, int mode, int speed, int line, char* text)
     pthread_create (&thread_id, NULL, run, (void *)fdlcd);
 
 }
+
 /**********************************************************/
 void lcdStop(int fdlcd)
 {
