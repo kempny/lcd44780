@@ -1,9 +1,12 @@
 /********************************************************************************
-*   delay:
-*       This file is part of stepmotor - RaspberryPi stepper motor 
-*       control library using A4988 controller
+*   delay.c
+*       This file is part of lcdi2c - RaspberryPi library
+*       for LCD display with the HITACHI HD44780 and compatible controlleri,
+*       I2C interface with PCF8574 or/and PCF8574A I/O expander
 *       Copyright (C) 2021  Boguslaw Kempny kempny@stanpol.com.pl
 *
+*********************************************************************************
+
 *********************************************************************************
 *    stepmotor is free software: you can redistribute it and/or modify
 *    it under the terms of the GNU Lesser General Public License as published by
