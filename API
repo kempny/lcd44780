@@ -74,10 +74,11 @@ void lcdRun(int fdlcd, int mode, int speed, int line, char* text);
   Start animation of text.
   the animation is done in the thread, you can do other tasks,
   to stop animation use lcdStop(int fdlcd)
+  You can animate text up to 200 characters long.
   
    fdlcd - file descriptor returned by i2copen()
    speed - speed of animation, in in 1/10 sec increments
-   line - line of display to show animated text
+   line - line of display to show animated text (200 charactersi max)
    text - string to display and animate
    mode:
      0 - at end of displayed text start from begining
