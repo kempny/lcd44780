@@ -91,5 +91,13 @@ void lcdStop(int fdlcd);
    fdlcd - file descriptor returned by i2copen()
 
 
+ void lcdDefc(int fdlcd, int addr, unsigned char* matrix)
+ 
+ Define custom character
+ You can define up to 8 characters, 5x8 pixels
+ 
+ fdlcd - file descriptor returned by i2copen()
+ addr - address of character, 0 - 8
+ Matrix - bitmap of character, 8 bytes
  
 
