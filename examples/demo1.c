@@ -20,7 +20,7 @@
 *    along with wiringPi.  If not, see <http://www.gnu.org/licenses/>.
 *
 *********************************************************************************
-**   demo program for 1 display                                                ** 
+**   demo1 program for single display connected to I2C bus                     **    
 **   compile with:                                                             **
 **     make                                                                    **
 **   run:                                                                      **
@@ -46,10 +46,10 @@
 
 
 
-//  i2c address, change if necessary
+// 3 displays,   i2c addresses
+// change if necessary to your addresses
 
-#define I2C_ADDR0   0x27 // I2C device address
-
+#define I2C_ADDR0   0x26 // I2C device address
 
 char buftime[25];
 
@@ -85,10 +85,11 @@ char *argv[];
 
 {
 
+unsigned char matrix[8]; 
 
-// display 0, 4 lines, 20 columns
+// display 0, 4 lines, 16 columns
   display0=i2copen(1, I2C_ADDR0);
-  lcdinit(display0, 4, 20); // setup LCD
+  lcdinit(display0, 4, 16); // setup LCD
 
 // turn display and backlight on, cursor and blinking off
   lcdSet(display0,1, 0, 0, 1); 
@@ -96,10 +97,58 @@ char *argv[];
 //Clear display
   lcdClr(display0);
 
+// define custom characters
+  matrix[0] = 0x1f;
+  matrix[1] = 0x11;
+  matrix[2] = 0x11;
+  matrix[3] = 0x11;
+  matrix[4] = 0x11;
+  matrix[5] = 0x11;
+  matrix[6] = 0x11;
+  matrix[7] = 0x1f;
+  lcdDefc(display0, 0, matrix);
+  lcdChar(display0, 0x00);
+
+  matrix[0] = 0x04;
+  matrix[1] = 0x0e;
+  matrix[2] = 0x1f;
+  matrix[3] = 0x1f;
+  matrix[4] = 0x04;
+  matrix[5] = 0x04;
+  matrix[6] = 0x04;
+  matrix[7] = 0x0e;
+  lcdDefc(display0, 1, matrix);
+
+  matrix[0] = 0x0e;
+  matrix[1] = 0x04;
+  matrix[2] = 0x04;
+  matrix[3] = 0x04;
+  matrix[4] = 0x1f;
+  matrix[5] = 0x1f;
+  matrix[6] = 0x0e;
+  matrix[7] = 0x04;
+  lcdDefc(display0, 2, matrix);
+  lcdLoc(display0, 1,0);
+  lcdChar(display0, 0x01);
+  lcdChar(display0, 0x02);
+  lcdLine(display0,2,1,"Custom");
+  lcdLine(display0,2,2,"characters");
+  sleep(3);
+  lcdClr(display0);
+
+
+// Display block of text
+  lcdBlock(display0,0,1,"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvw");
+  lcdLoc(display0, 0,0);
+
+  sleep(5);
+
+  lcdClr(display0);
+
 // Display some text
-lcdLine(display0,6,0,"Test");
-lcdLine(display0,3,1,"Display 0");
-sleep(3);
+  lcdLine(display0,6,0,"Test");
+  lcdLine(display0,3,1,"Display 0");
+  sleep(3);
 
 // Create thread to display date and time on display 0
 
@@ -109,61 +158,53 @@ sleep(3);
 
 //Display animated text 
 
-//Mode 0, display 0
-lcdRun(display0, 0, 3, 1, "++ To be or not to be -- ");
-sleep(15);
-
-lcdStop(display0);
-lcdClr(display0);
-sleep(2);
-
 // Mode 1, display 0
-lcdRun(display0, 1, 3, 1, "++ To be or not to be -- ");
-sleep(10);
+  lcdRun(display0, 1, 3, 1, "++To be or not to be -- ");
+
+  sleep(10);
 
 //stop displaying animated text on display 0
-lcdStop(display0);
-lcdClr(display0);
-sleep(2);
+  lcdStop(display0);
 
-//Display line of text on display 0
-lcdLine(display0,0,1,"ABCDEFGHI");
-sleep(2);
-lcdClr(display0);
+// Clear display 0
+  lcdClr(display0);
+  sleep(2);
 
-
-
-//Display block of text on display 0
-lcdBlock(display0,5,1,"block 0123456789 0123456789 01234567890");
-sleep(4);
-lcdClr(display0);
 
 //display single characters on  display 0
-lcdLoc(display0, 0,0);
-lcdChar(display0, 'A');
-lcdLoc(display0, 5,1);
-lcdChar(display0, 'B');
-lcdLoc(display0, 10,2);
-lcdChar(display0, 'C');
-lcdLoc(display0, 15,3);
-lcdChar(display0, 'D');
+  lcdLoc(display0, 0,0);
+  lcdChar(display0, 'A');
+  lcdLoc(display0, 5,1);
+  lcdChar(display0, 'B');
+  lcdLoc(display0, 10,2);
+  lcdChar(display0, 'C');
+  lcdLoc(display0, 15,3);
+  lcdChar(display0, 'D');
 
-sleep(3);
+  sleep(3);
 
 //Switch off display 0
   lcdSet(display0,0, 0, 0, 1); 
-sleep(2);
+  sleep(3);
 
 //Switch on display 0
   lcdSet(display0,1, 0, 0, 1); 
-sleep(2);
+  sleep(2);
 
-lcdClr(display0);
-lcdLine(display0,5,1,"The End");
+//Switch off backlight of display 0
+  lcdSet(display0,1, 0, 0, 0); 
+  sleep(3);
+
+//Switch off backlight of display 0
+  lcdSet(display0,1, 0, 0, 1); 
+  sleep(2);
+
+  lcdClr(display0);
+  lcdLine(display0,5,1,"The End");
 
 //  the time is still displayed by thread
 
-sleep(5);
+  sleep(5);
 
 }                              
 
