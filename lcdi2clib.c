@@ -221,7 +221,20 @@ void lcdClr(int fdlcd)   {
   send_byte(fdlcd, 0x02, CMD);
   parm[fdlcd].free_disp=0;
 }
+//*************************************
+// Define character
 
+
+void lcdDefc(int fdlcd, int addr, unsigned char* matrix) {
+
+int i;
+
+send_byte(fdlcd, 0x40 | addr * 8, CMD);
+for (i=0; i<8; i++)
+  send_byte(fdlcd, matrix[i], DATA);
+
+send_byte(fdlcd, 0x80, CMD); //switch to DDRAM addressing
+} 
 
 
 //*************************************
@@ -253,7 +266,7 @@ void lcdLoc(int fdlcd, int col, int line)   {
 
 
 //*************************************
-// Display char at curor position
+// Display char at cursor position
 // For internal use of library, display is already locked
 
 void lcdCharI(int fdlcd, char val)   {

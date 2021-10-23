@@ -38,6 +38,7 @@ void lcdChar(int fdlcd, char val);
 void lcdBlock(int fdlcd, int x, int y, char* text);
 void lcdRun(int fdlcd, int mode, int speed, int line, char* text);
 void lcdStop(int fdlcd);
+void lcdDefc(int fdlcd, int addr, unsigned char* matrix);
 
 
 #define ANIMLEN 200
