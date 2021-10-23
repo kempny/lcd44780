@@ -275,7 +275,7 @@ void lcdCharI(int fdlcd, char val)   {
 }
 
 //*************************************
-// Display char at curor position
+// Display char at cursor position
 
 void lcdChar(int fdlcd, char val)   {
 
